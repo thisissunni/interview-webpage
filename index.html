@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>采访提纲</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
         /* 设置整体页面样式 */
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
             background-color: #f4f4f9;
             margin: 0;
             padding: 0;
+            overflow-x: hidden; /* 防止滑动时出现水平滚动条 */
         }
 
         .container {
@@ -19,206 +21,454 @@
             margin: 50px auto;
             padding: 20px;
             background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+            position: relative; /* 为绝对定位的箭头按钮提供容器 */
+        }
+
+        /* 页面容器：用于实现滑动效果 */
+        .pages-container {
+            position: relative;
+            overflow: hidden;
+            min-height: 400px; /* 保证页面高度一致 */
         }
 
         .question-page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
             display: none; /* 默认不显示 */
-            transition: transform 0.5s ease-in-out; /* 添加页面过渡动画 */
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* 平滑滑动动画 */
         }
 
+        /* 激活状态：显示当前页面 */
         .question-page.active {
-            display: block; /* 当前页面显示 */
+            display: block;
+            transform: translateX(0);
         }
 
+        /* 滑动动画：下一页从右侧进入 */
+        .question-page.next {
+            transform: translateX(100%);
+        }
+
+        /* 滑动动画：上一页从左侧进入 */
+        .question-page.prev {
+            transform: translateX(-100%);
+        }
+
+        /* 感谢页面专用样式 */
+        .thank-you-page {
+            text-align: left;
+            line-height: 1.8;
+            padding: 40px 30px;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .thank-you-content {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 40px;
+        }
+
+        .start-button {
+            display: block;
+            margin: 0 auto;
+            padding: 12px 30px;
+            font-size: 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .start-button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(40, 167, 69, 0.2);
+        }
+
+        /* 箭头按钮样式：放在页面两侧 */
         .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
             font-size: 24px;
             cursor: pointer;
-            padding: 10px;
-            background-color: #007bff;
+            background-color: rgba(0, 123, 255, 0.9);
             color: white;
             border: none;
             border-radius: 50%;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(0, 123, 255, 0.3);
+            z-index: 10; /* 确保按钮在页面上方 */
+        }
+
+        /* 左侧箭头 */
+        .nav-button.prev-btn {
+            left: -25px;
+        }
+
+        /* 右侧箭头 */
+        .nav-button.next-btn {
+            right: -25px;
         }
 
         .nav-button:hover {
             background-color: #0056b3;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 86, 179, 0.4);
         }
 
-        .question {
-            margin-bottom: 30px;
+        .nav-button:disabled {
+            background-color: rgba(160, 160, 160, 0.5);
+            cursor: not-allowed;
+            transform: translateY(-50%);
+            box-shadow: none;
+        }
+
+        /* 问题标题样式 */
+        .question-page h3 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-weight: 600;
+            border-left: 4px solid #007bff;
+            padding-left: 15px;
+        }
+
+        .question-page p {
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* 文本框样式优化 */
+        .form-control {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            resize: vertical;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+            outline: none;
         }
 
         .upload-container {
-            margin-top: 10px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .upload-container input[type="file"] {
-            margin-right: 10px;
+            flex: 1;
+            min-width: 200px;
         }
 
-        textarea {
-            width: 100%;
-            height: 100px;
+        /* 录音按钮样式优化 */
+        .upload-container button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0 15px;
+            height: 42px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
-        /* 样式调整：录音按钮和播放器 */
-        .upload-container button,
+        .upload-container button:hover {
+            background-color: #c82333;
+        }
+
         .upload-container audio {
-            height: 40px;
-            vertical-align: middle;
+            flex: 1;
+            min-width: 200px;
+            height: 42px;
+        }
+
+        /* 响应式调整：移动端优化 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px 15px;
+                padding: 15px;
+            }
+
+            .nav-button {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+
+            .nav-button.prev-btn {
+                left: -15px;
+            }
+
+            .nav-button.next-btn {
+                right: -15px;
+            }
+
+            .thank-you-page {
+                padding: 20px 15px;
+            }
+
+            .thank-you-content {
+                font-size: 16px;
+            }
+
+            .question-page h3 {
+                font-size: 18px;
+            }
+
+            .upload-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .upload-container input[type="file"],
+            .upload-container audio {
+                width: 100%;
+                min-width: auto;
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- 问题 1 -->
-        <div class="question-page active" id="page1">
-            <h3>1. 李记者，请问在您的工作中，会参与到《DV现场》栏目的哪些方面？</h3>
-            <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
-            <div class="upload-container">
-                <input type="file" accept="image/*,audio/*" multiple>
-                <button id="recordButton1">开始录音</button>
-                <audio id="audioPlayer1" controls></audio>
-            </div>
-        </div>
+        <!-- 左右箭头按钮：放在容器两侧 -->
+        <button class="nav-button prev-btn" id="prevButton" disabled>
+            <i class="bi bi-arrow-left"></i>
+        </button>
+        <button class="nav-button next-btn" id="nextButton" disabled>
+            <i class="bi bi-arrow-right"></i>
+        </button>
 
-        <!-- 问题 2 -->
-        <div class="question-page" id="page2">
-            <h3>2. 在很多人眼中，《DV现场》是一档很有特色的栏目，您作为贴近新闻生产端的记者，在您心中这是一档什么样的栏目呢？</h3>
-            <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
-            <div class="upload-container">
-                <input type="file" accept="image/*,audio/*" multiple>
-                <button id="recordButton2">开始录音</button>
-                <audio id="audioPlayer2" controls></audio>
+        <!-- 页面容器：用于实现滑动效果 -->
+        <div class="pages-container">
+            <!-- 开始页面（修改后） -->
+            <div class="question-page active thank-you-page" id="page0">
+                <div class="thank-you-content">
+                    <p>尊敬的李记者：</p>
+                    <p>非常感谢您在百忙之中接受我们的采访！此次采访内容仅用于课堂学习，所有问题均为学习讨论之用，您的回答将极大帮助我们理解与新闻传播相关的实际工作。</p>
+                    <p>若有任何问题您不便回答，您完全可以选择跳过。我们深知您工作繁忙，感谢您花时间参与此项活动。</p>
+                </div>
+                <button class="start-button" id="startInterview">开始</button>
             </div>
-        </div>
 
-        <!-- 问题 3 -->
-        <div class="question-page" id="page3">
-            <h3>3. 相信您在工作中会和其他栏目工作者对接，您能简单介绍《DV现场》的工作流程、管理机制和技术细节等方面吗？</h3>
-            <p>（比如节目主播卢sir的播讲稿是如何产生的？讲稿本身先写粤语还是普通话版本？如何处理粤语和普通话字幕的转换？选题的线索如何获得、真正关切民生需求？如何把握记者主观点评和新闻客观事实之间、亲民和官方之间的平衡？我们也注意到您有和卢sir连麦的直播，像这样和记者对话环节是怎么提前规划的？）</p>
-            <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
-            <div class="upload-container">
-                <input type="file" accept="image/*,audio/*" multiple>
-                <button id="recordButton3">开始录音</button>
-                <audio id="audioPlayer3" controls></audio>
+            <!-- 问题 1 -->
+            <div class="question-page next" id="page1">
+                <h3>1. 李记者，请问在您的工作中，会参与到《DV现场》栏目的哪些方面？</h3>
+                <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
+                <div class="upload-container">
+                    <input type="file" accept="image/*,audio/*" multiple>
+                    <button id="recordButton1">开始录音</button>
+                    <audio id="audioPlayer1" controls> ></audio>
+                </div>
             </div>
-        </div>
 
-        <!-- 问题 4 -->
-        <div class="question-page" id="page4">
-            <h3>4. 您认为《DV现场》在新媒体时代的适应情况如何？栏目发展历史中有哪些关键转折点吗？</h3>
-            <p>因为我们也特别关注到，在抖音上有一个《DV短评》的合集，十分受欢迎，内容主要集中了卢sir的口播切片。请问栏目组设立这个短评合集，是出于什么考虑呢？您觉得这种口播短评受欢迎的动因有哪些呢？（例如受众需求/媒体竞争等内在动因、平台特性/文化土壤等外在优势）</p>
-            <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
-            <div class="upload-container">
-                <input type="file" accept="image/*,audio/*" multiple>
-                <button id="recordButton4">开始录音</button>
-                <audio id="audioPlayer4" controls></audio>
+            <!-- 问题 2 -->
+            <div class="question-page next" id="page2">
+                <h3>2. 在很多人眼中，《DV现场》是一档很有特色的栏目，您作为贴近新闻生产端的记者，在您心中这是一档什么样的栏目呢？</h3>
+                <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
+                <div class="upload-container">
+                    <input type="file" accept="image/*,audio/*" multiple>
+                    <button id="recordButton2">开始录音</button>
+                    <audio id="audioPlayer2" controls> ></audio>
+                </div>
             </div>
-        </div>
 
-        <!-- 问题 5 -->
-        <div class="question-page" id="page5">
-            <h3>5. 我们特别关注到在B站等平台有栏目中“点歌环节”的二创视频，栏目组对此有什么看法？</h3>
-            <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
-            <div class="upload-container">
-                <input type="file" accept="image/*,audio/*" multiple>
-                <button id="recordButton5">开始录音</button>
-                <audio id="audioPlayer5" controls></audio>
+            <!-- 问题 3 -->
+            <div class="question-page next" id="page3">
+                <h3>3. 相信您在工作中会和其他栏目工作者对接，您能简单介绍《DV现场》的工作流程、管理机制和技术细节等方面吗？</h3>
+                <p>（比如节目主播卢sir的播讲稿是如何产生的？讲稿本身先写粤语还是普通话版本？如何处理粤语和普通话字幕的转换？选题的线索如何获得、真正关切民生需求？如何把握记者主观点评和新闻客观事实之间、亲民和官方之间的平衡？我们也注意到您有和卢sir连麦的直播，像这样和记者对话环节是怎么提前规划的？）</p>
+                <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
+                <div class="upload-container">
+                    <input type="file" accept="image/*,audio/*" multiple>
+                    <button id="recordButton3">开始录音</button>
+                    <audio id="audioPlayer3" controls> ></audio>
+                </div>
             </div>
-        </div>
 
-        <!-- 问题 6 -->
-        <div class="question-page" id="page6">
-            <h3>6. 如果您给高校新闻专业的同学做分享，您最想推荐《DV现场》的一点是什么？</h3>
-            <p>（工作氛围/流程模式/演播特色/anything）</p>
-            <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
-            <div class="upload-container">
-                <input type="file" accept="image/*,audio/*" multiple>
-                <button id="recordButton6">开始录音</button>
-                <audio id="audioPlayer6" controls></audio>
+            <!-- 问题 4 -->
+            <div class="question-page next" id="page4">
+                <h3>4. 您认为《DV现场》在新媒体时代的适应情况如何？栏目发展历史中有哪些关键转折点吗？</h3>
+                <p>因为我们也特别关注到，在抖音上有一个《DV短评》的合集，十分受欢迎，内容主要集中了卢sir的口播切片。请问栏目组设立这个短评合集，是出于什么考虑呢？您觉得这种口播短评受欢迎的动因有哪些呢？（例如受众需求/媒体竞争等内在动因、平台特性/文化土壤等外在优势）</p>
+                <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
+                <div class="upload-container">
+                    <input type="file" accept="image/*,audio/*" multiple>
+                    <button id="recordButton4">开始录音</button>
+                    <audio id="audioPlayer4" controls> ></audio>
+                </div>
             </div>
-        </div>
 
-        <!-- 问题 7 -->
-        <div class="question-page" id="page7">
-            <h3>7. 很多人认为《DV现场》的成功原因在于卢sir鲜明的个人特色，我们想知道您的团队是如何打造并利用好这一特色的？</h3>
-            <p>（从任何方面都可以，新闻采集和选题、稿件撰写、化妆和造型、后期制作、或者是卢sir本人的工作）</p>
-            <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
-            <div class="upload-container">
-                <input type="file" accept="image/*,audio/*" multiple>
-                <button id="recordButton7">开始录音</button>
-                <audio id="audioPlayer7" controls></audio>
+            <!-- 问题 5 -->
+            <div class="question-page next" id="page5">
+                <h3>5. 我们特别关注到在B站等平台有栏目中“点歌环节”的二创视频，栏目组对此有什么看法？</h3>
+                <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
+                <div class="upload-container">
+                    <input type="file" accept="image/*,audio/*" multiple>
+                    <button id="recordButton5">开始录音</button>
+                    <audio id="audioPlayer5" controls> ></audio>
+                </div>
             </div>
-        </div>
 
-        <!-- 问题 8 -->
-        <div class="question-page" id="page8">
-            <h3>8. 最后，您有没有哪些印象深刻的故事能跟我们分享一下？</h3>
-            <p>（您亲自参与的、或者是身边的《DV现场》工作故事）</p>
-            <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
-            <div class="upload-container">
-                <input type="file" accept="image/*,audio/*" multiple>
-                <button id="recordButton8">开始录音</button>
-                <audio id="audioPlayer8" controls></audio>
+            <!-- 问题 6 -->
+            <div class="question-page next" id="page6">
+                <h3>6. 如果您给高校新闻专业的同学做分享，您最想推荐《DV现场》的一点是什么？</h3>
+                <p>（工作氛围/流程模式/演播特色/anything）</p>
+                <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
+                <div class="upload-container">
+                    <input type="file" accept="image/*,audio/*" multiple>
+                    <button id="recordButton6">开始录音</button>
+                    <audio id="audioPlayer6" controls> ></audio>
+                </div>
             </div>
-        </div>
 
-        <!-- 左右翻页按钮 -->
-        <div class="text-center">
-            <button class="nav-button" id="prevButton">←</button>
-            <button class="nav-button" id="nextButton">→</button>
+            <!-- 问题 7 -->
+            <div class="question-page next" id="page7">
+                <h3>7. 很多人认为《DV现场》的成功原因在于卢sir鲜明的个人特色，我们想知道您的团队是如何打造并利用好这一特色的？</h3>
+                <p>（从任何方面都可以，新闻采集和选题、稿件撰写、化妆和造型、后期制作、或者是卢sir本人的工作）</p>
+                <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
+                <div class="upload-container">
+                    <input type="file" accept="image/*,audio/*" multiple>
+                    <button id="recordButton7">开始录音</button>
+                    <audio id="audioPlayer7" controls> ></audio>
+                </div>
+            </div>
+
+            <!-- 问题 8 -->
+            <div class="question-page next" id="page8">
+                <h3>8. 最后，您有没有哪些印象深刻的故事能跟我们分享一下？</h3>
+                <p>（您亲自参与的、或者是身边的《DV现场》工作故事）</p>
+                <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
+                <div class="upload-container">
+                    <input type="file" accept="image/*,audio/*" multiple>
+                    <button id="recordButton8">开始录音</button>
+                    <audio id="audioPlayer8" controls> ></audio>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        let currentPage = 1;
-        const totalPages = 8;  // 设置总页面数，按需调整
-
+        let currentPage = 0;
+        const totalPages = 8;
         const pages = document.querySelectorAll('.question-page');
         const prevButton = document.getElementById('prevButton');
         const nextButton = document.getElementById('nextButton');
+        const startButton = document.getElementById('startInterview');
 
-        function updatePage() {
-            // 隐藏所有页面
-            pages.forEach(page => page.classList.remove('active'));
-
-            // 显示当前页面
-            document.getElementById(`page${currentPage}`).classList.add('active');
+        // 初始化页面状态
+        function initPageStates() {
+            pages.forEach((page, index) => {
+                if (index === 0) {
+                    page.classList.add('active');
+                } else {
+                    page.classList.add('next');
+                    page.classList.remove('active', 'prev');
+                }
+            });
+            updateButtonStates();
         }
 
+        // 更新按钮状态（是否可用）
+        function updateButtonStates() {
+            prevButton.disabled = currentPage <= 1; // 第一题不能再后退
+            nextButton.disabled = currentPage >= totalPages; // 最后一题不能再前进
+            
+            // 开始页面隐藏箭头
+            if (currentPage === 0) {
+                prevButton.style.display = 'none';
+                nextButton.style.display = 'none';
+            } else {
+                prevButton.style.display = 'flex';
+                nextButton.style.display = 'flex';
+            }
+        }
+
+        // 切换页面（核心滑动逻辑）
+        function switchPage(direction) {
+            const currentPageElement = document.getElementById(`page${currentPage}`);
+            let newPage = currentPage + direction;
+
+            // 边界控制
+            if (newPage < 1 || newPage > totalPages) return;
+
+            const newPageElement = document.getElementById(`page${newPage}`);
+
+            // 移除所有页面的active类
+            pages.forEach(page => page.classList.remove('active'));
+
+            // 设置滑动方向
+            if (direction === 1) { // 下一页：当前页向左滑出，新页从右侧滑入
+                currentPageElement.classList.add('prev');
+                currentPageElement.classList.remove('next');
+                newPageElement.classList.remove('prev');
+                newPageElement.classList.add('next', 'active');
+            } else { // 上一页：当前页向右滑出，新页从左侧滑入
+                currentPageElement.classList.add('next');
+                currentPageElement.classList.remove('prev');
+                newPageElement.classList.remove('next');
+                newPageElement.classList.add('prev', 'active');
+            }
+
+            // 更新当前页码和按钮状态
+            currentPage = newPage;
+            updateButtonStates();
+        }
+
+        // 开始按钮事件
+        startButton.addEventListener('click', () => {
+            switchPage(1);
+        });
+
+        // 上一页按钮事件
         prevButton.addEventListener('click', () => {
-            if (currentPage > 1) {
-                currentPage--;
-                updatePage();
-            }
+            switchPage(-1);
         });
 
+        // 下一页按钮事件
         nextButton.addEventListener('click', () => {
-            if (currentPage < totalPages) {
-                currentPage++;
-                updatePage();
-            }
+            switchPage(1);
         });
 
-        // 初始化页面
-        updatePage();
-
-        // 录音功能
+        // 录音功能（保持原有逻辑，优化细节）
         function setupRecording(buttonId, audioPlayerId) {
             let recordButton = document.getElementById(buttonId);
             let audioPlayer = document.getElementById(audioPlayerId);
             let mediaRecorder;
             let audioChunks = [];
+            let isRecording = false;
 
             recordButton.addEventListener('click', () => {
-                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                if (isRecording) {
                     // 停止录音
                     mediaRecorder.stop();
                     recordButton.textContent = '开始录音';
+                    recordButton.style.backgroundColor = '#dc3545';
+                    isRecording = false;
                 } else {
                     // 开始录音
                     navigator.mediaDevices.getUserMedia({ audio: true })
@@ -228,27 +478,36 @@
                                 audioChunks.push(event.data);
                             };
                             mediaRecorder.onstop = () => {
-                                let audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                                let audioURL = URL.createObjectURL(audioBlob);
+                                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                                const audioURL = URL.createObjectURL(audioBlob);
                                 audioPlayer.src = audioURL;
+                                audioChunks = []; // 重置录音片段
                             };
                             mediaRecorder.start();
                             recordButton.textContent = '停止录音';
+                            recordButton.style.backgroundColor = '#28a745';
+                            isRecording = true;
                         })
-                        .catch(err => console.error('Error accessing media devices.', err));
+                        .catch(err => {
+                            console.error('录音权限获取失败：', err);
+                            alert('请允许麦克风权限以使用录音功能');
+                        });
                 }
             });
         }
 
-        // 为每个录音按钮和播放器设置功能
-        setupRecording('recordButton1', 'audioPlayer1');
-        setupRecording('recordButton2', 'audioPlayer2');
-        setupRecording('recordButton3', 'audioPlayer3');
-        setupRecording('recordButton4', 'audioPlayer4');
-        setupRecording('recordButton5', 'audioPlayer5');
-        setupRecording('recordButton6', 'audioPlayer6');
-        setupRecording('recordButton7', 'audioPlayer7');
-        setupRecording('recordButton8', 'audioPlayer8');
+        // 初始化所有录音按钮
+        for (let i = 1; i <= 8; i++) {
+            setupRecording(`recordButton${i}`, `audioPlayer${i}`);
+        }
+
+        // 修复音频标签语法错误（移除多余的>）
+        document.querySelectorAll('audio').forEach(audio => {
+            audio.innerHTML = '';
+        });
+
+        // 页面加载完成后初始化
+        window.addEventListener('load', initPageStates);
     </script>
 </body>
 </html>
