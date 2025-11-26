@@ -6,16 +6,24 @@
     <title>采访提纲</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .question {
-            margin-top: 20px;
-        }
-        .upload-container {
-            margin-top: 10px;
-        }
-        .upload-container input[type="file"] {
-            margin-right: 10px;
-        }
-    </style>
+    .question {
+        margin-top: 20px;
+    }
+    .upload-container {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;  /* 使用 Flexbox 让按钮和音频播放器垂直居中对齐 */
+    }
+    .upload-container button {
+        margin-right: 10px;  /* 按钮和音频播放器之间的间隔 */
+    }
+    .upload-container button,
+    .upload-container audio {
+        height: 40px; /* 设置一致的高度 */
+        vertical-align: middle; /* 确保两者垂直居中 */
+    }
+</style>
+
 </head>
 <body>
     <div class="container">
