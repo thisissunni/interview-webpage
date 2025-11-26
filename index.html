@@ -6,37 +6,76 @@
     <title>采访提纲</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* 设置整体页面样式 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
         .question-page {
-            display: none;
+            display: none; /* 默认不显示 */
+            transition: transform 0.5s ease-in-out; /* 添加页面过渡动画 */
         }
+
         .question-page.active {
-            display: block;
+            display: block; /* 当前页面显示 */
         }
-        .intro-page {
-            text-align: center;
-            margin-top: 50px;
+
+        .nav-button {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            transition: background-color 0.3s;
         }
-        .intro-page button {
-            margin-top: 20px;
+
+        .nav-button:hover {
+            background-color: #0056b3;
         }
-        .navigation {
-            text-align: center;
-            margin-top: 20px;
+
+        .question {
+            margin-bottom: 30px;
+        }
+
+        .upload-container {
+            margin-top: 10px;
+        }
+
+        .upload-container input[type="file"] {
+            margin-right: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+
+        /* 样式调整：录音按钮和播放器 */
+        .upload-container button,
+        .upload-container audio {
+            height: 40px;
+            vertical-align: middle;
         }
     </style>
 </head>
 <body>
-    <!-- Introduction Page (Start Page) -->
-    <div class="intro-page" id="introPage">
-        <h1>尊敬的李记者，感谢您的参与！</h1>
-        <p>非常感谢您在百忙之中接受我们的采访！此次采访内容仅用于课堂学习，所有问题均为学习讨论之用，您的回答将极大帮助我们理解与新闻传播相关的实际工作。</p>
-        <p>若有任何问题您不便回答，您完全可以选择跳过。我们深知您工作繁忙，感谢您花时间参与此项活动。</p>
-        <button id="startInterview" class="btn btn-primary">开始采访</button>
-    </div>
-
     <div class="container">
         <!-- 问题 1 -->
-        <div class="question-page" id="page1">
+        <div class="question-page active" id="page1">
             <h3>1. 李记者，请问在您的工作中，会参与到《DV现场》栏目的哪些方面？</h3>
             <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
             <div class="upload-container">
@@ -136,7 +175,7 @@
     </div>
 
     <script>
-        let currentPage = 0;  // 从 0 开始
+        let currentPage = 1;
         const totalPages = 8;  // 设置总页面数，按需调整
 
         const pages = document.querySelectorAll('.question-page');
@@ -148,18 +187,18 @@
             pages.forEach(page => page.classList.remove('active'));
 
             // 显示当前页面
-            document.getElementById(`page${currentPage + 1}`).classList.add('active');
+            document.getElementById(`page${currentPage}`).classList.add('active');
         }
 
         prevButton.addEventListener('click', () => {
-            if (currentPage > 0) {
+            if (currentPage > 1) {
                 currentPage--;
                 updatePage();
             }
         });
 
         nextButton.addEventListener('click', () => {
-            if (currentPage < totalPages - 1) {
+            if (currentPage < totalPages) {
                 currentPage++;
                 updatePage();
             }
@@ -168,15 +207,48 @@
         // 初始化页面
         updatePage();
 
-        // 点击“开始采访”按钮时，隐藏感谢页面，显示第一个问题页面
-        document.getElementById('startInterview').addEventListener('click', () => {
-            // 隐藏感谢页面
-            document.getElementById('introPage').style.display = 'none';
-            
-            // 显示第一个问题页面
-            document.getElementById('page1').style.display = 'block';
-        });
+        // 录音功能
+        function setupRecording(buttonId, audioPlayerId) {
+            let recordButton = document.getElementById(buttonId);
+            let audioPlayer = document.getElementById(audioPlayerId);
+            let mediaRecorder;
+            let audioChunks = [];
 
+            recordButton.addEventListener('click', () => {
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    // 停止录音
+                    mediaRecorder.stop();
+                    recordButton.textContent = '开始录音';
+                } else {
+                    // 开始录音
+                    navigator.mediaDevices.getUserMedia({ audio: true })
+                        .then(stream => {
+                            mediaRecorder = new MediaRecorder(stream);
+                            mediaRecorder.ondataavailable = event => {
+                                audioChunks.push(event.data);
+                            };
+                            mediaRecorder.onstop = () => {
+                                let audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                                let audioURL = URL.createObjectURL(audioBlob);
+                                audioPlayer.src = audioURL;
+                            };
+                            mediaRecorder.start();
+                            recordButton.textContent = '停止录音';
+                        })
+                        .catch(err => console.error('Error accessing media devices.', err));
+                }
+            });
+        }
+
+        // 为每个录音按钮和播放器设置功能
+        setupRecording('recordButton1', 'audioPlayer1');
+        setupRecording('recordButton2', 'audioPlayer2');
+        setupRecording('recordButton3', 'audioPlayer3');
+        setupRecording('recordButton4', 'audioPlayer4');
+        setupRecording('recordButton5', 'audioPlayer5');
+        setupRecording('recordButton6', 'audioPlayer6');
+        setupRecording('recordButton7', 'audioPlayer7');
+        setupRecording('recordButton8', 'audioPlayer8');
     </script>
 </body>
 </html>
