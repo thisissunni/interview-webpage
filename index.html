@@ -136,7 +136,7 @@
     </div>
 
     <script>
-        let currentPage = 1;
+        let currentPage = 0;  // 从 0 开始
         const totalPages = 8;  // 设置总页面数，按需调整
 
         const pages = document.querySelectorAll('.question-page');
@@ -148,18 +148,18 @@
             pages.forEach(page => page.classList.remove('active'));
 
             // 显示当前页面
-            document.getElementById(`page${currentPage}`).classList.add('active');
+            document.getElementById(`page${currentPage + 1}`).classList.add('active');
         }
 
         prevButton.addEventListener('click', () => {
-            if (currentPage > 1) {
+            if (currentPage > 0) {
                 currentPage--;
                 updatePage();
             }
         });
 
         nextButton.addEventListener('click', () => {
-            if (currentPage < totalPages) {
+            if (currentPage < totalPages - 1) {
                 currentPage++;
                 updatePage();
             }
@@ -176,6 +176,7 @@
             // 显示第一个问题页面
             document.getElementById('page1').style.display = 'block';
         });
+
     </script>
 </body>
 </html>
