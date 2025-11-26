@@ -6,164 +6,175 @@
     <title>采访提纲</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-    .question {
-        margin-top: 20px;
-    }
-    .upload-container {
-        margin-top: 10px;
-        display: flex;
-        align-items: center;  /* 使用 Flexbox 让按钮和音频播放器垂直居中对齐 */
-    }
-    .upload-container button {
-        margin-right: 10px;  /* 按钮和音频播放器之间的间隔 */
-    }
-    .upload-container button,
-    .upload-container audio {
-        height: 40px; /* 设置一致的高度 */
-        vertical-align: middle; /* 确保两者垂直居中 */
-    }
-</style>
+        /* 设置整体页面样式 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
 
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-page {
+            display: none; /* 默认不显示 */
+            transition: transform 0.5s ease-in-out; /* 添加页面过渡动画 */
+        }
+
+        .question-page.active {
+            display: block; /* 当前页面显示 */
+        }
+
+        .nav-button {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #0056b3;
+        }
+
+        .question {
+            margin-bottom: 30px;
+        }
+
+        .upload-container {
+            margin-top: 10px;
+        }
+
+        .upload-container input[type="file"] {
+            margin-right: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+
+        /* 样式调整：录音按钮和播放器 */
+        .upload-container button,
+        .upload-container audio {
+            height: 40px;
+            vertical-align: middle;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center mt-4">采访提纲</h1>
-
-        <!-- Question 1 -->
-        <div class="question">
+        <!-- 问题 1 -->
+        <div class="question-page active" id="page1">
             <h3>1. 李记者，请问在您的工作中，会参与到《DV现场》栏目的哪些方面？</h3>
-            <textarea class="form-control" name="question_1" rows="4" placeholder="请在此回答..."></textarea>
+            <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
             <div class="upload-container">
-                <input type="file" name="file_1" accept="image/*,audio/*" multiple>
+                <input type="file" accept="image/*,audio/*" multiple>
+                <button id="recordButton">开始录音</button>
+                <audio id="audioPlayer" controls></audio>
             </div>
-            <button class="btn btn-info mt-2" id="recordButton1">开始录音</button>
-            <audio id="audioPlayer1" controls></audio>
         </div>
 
-        <!-- Question 2 -->
-        <div class="question">
-            <h3>2. 在很多人眼中，《DV现场》是一档很有特色的栏目，您作为贴近新闻生产端的记者，在您心中这是一档什么样的栏目呢？在广东台的新闻业同事们口中，这是一档什么样的栏目？</h3>
-            <textarea class="form-control" name="question_2" rows="4" placeholder="请在此回答..."></textarea>
+        <!-- 问题 2 -->
+        <div class="question-page" id="page2">
+            <h3>2. 在很多人眼中，《DV现场》是一档很有特色的栏目，您作为贴近新闻生产端的记者，在您心中这是一档什么样的栏目呢？</h3>
+            <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
             <div class="upload-container">
-                <input type="file" name="file_2" accept="image/*,audio/*" multiple>
+                <input type="file" accept="image/*,audio/*" multiple>
+                <button id="recordButton2">开始录音</button>
+                <audio id="audioPlayer2" controls></audio>
             </div>
-            <button class="btn btn-info mt-2" id="recordButton2">开始录音</button>
-            <audio id="audioPlayer2" controls></audio>
         </div>
 
-        <!-- Question 3 -->
-        <div class="question">
-            <h3>3. 相信您在工作中会和其他栏目工作者对接，您能简单介绍《DV现场》的工作流程、管理机制和技术细节等方面吗？</h3>
-            <p>（比如节目主播卢sir的播讲稿是如何产生的？讲稿本身先写粤语还是普通话版本？如何处理粤语和普通话字幕的转换？选题的线索如何获得、真正关切民生需求？如何把握记者主观点评和新闻客观事实之间、亲民和官方之间的平衡？我们也注意到您有和卢sir连麦的直播，像这样和记者对话环节是怎么提前规划的？）</p>
-            <textarea class="form-control" name="question_3" rows="4" placeholder="请在此回答..."></textarea>
-            <div class="upload-container">
-                <input type="file" name="file_3" accept="image/*,audio/*" multiple>
-            </div>
-            <button class="btn btn-info mt-2" id="recordButton3">开始录音</button>
-            <audio id="audioPlayer3" controls></audio>
-        </div>
+        <!-- 更多问题继续添加 -->
+        <!-- 你可以继续按此格式添加更多问题 -->
 
-        <!-- Question 4 -->
-        <div class="question">
-            <h3>4. 您认为《DV现场》在新媒体时代的适应情况如何？栏目发展历史中有哪些关键转折点吗？</h3>
-            <p>因为我们也特别关注到，在抖音上有一个《DV短评》的合集，十分受欢迎，内容主要集中了卢sir的口播切片。请问栏目组设立这个短评合集，是出于什么考虑呢？您觉得这种口播短评受欢迎的动因有哪些呢？（例如受众需求/媒体竞争等内在动因、平台特性/文化土壤等外在优势）</p>
-            <textarea class="form-control" name="question_4" rows="4" placeholder="请在此回答..."></textarea>
-            <div class="upload-container">
-                <input type="file" name="file_4" accept="image/*,audio/*" multiple>
-            </div>
-            <button class="btn btn-info mt-2" id="recordButton4">开始录音</button>
-            <audio id="audioPlayer4" controls></audio>
+        <!-- 左右翻页按钮 -->
+        <div class="text-center">
+            <button class="nav-button" id="prevButton">←</button>
+            <button class="nav-button" id="nextButton">→</button>
         </div>
-
-        <!-- Question 5 -->
-        <div class="question">
-            <h3>5. 我们特别关注到在B站等平台有栏目中“点歌环节”的二创视频，栏目组对此有什么看法？</h3>
-            <textarea class="form-control" name="question_5" rows="4" placeholder="请在此回答..."></textarea>
-            <div class="upload-container">
-                <input type="file" name="file_5" accept="image/*,audio/*" multiple>
-            </div>
-            <button class="btn btn-info mt-2" id="recordButton5">开始录音</button>
-            <audio id="audioPlayer5" controls></audio>
-        </div>
-
-        <!-- Question 6 -->
-        <div class="question">
-            <h3>6. 如果您给高校新闻专业的同学做分享，您最想推荐《DV现场》的一点是什么？</h3>
-            <p>（工作氛围/流程模式/演播特色/anything）</p>
-            <textarea class="form-control" name="question_6" rows="4" placeholder="请在此回答..."></textarea>
-            <div class="upload-container">
-                <input type="file" name="file_6" accept="image/*,audio/*" multiple>
-            </div>
-            <button class="btn btn-info mt-2" id="recordButton6">开始录音</button>
-            <audio id="audioPlayer6" controls></audio>
-        </div>
-
-        <!-- Question 7 -->
-        <div class="question">
-            <h3>7. 很多人认为《DV现场》的成功原因在于卢sir鲜明的个人特色，我们想知道您的团队是如何打造并利用好这一特色的？</h3>
-            <p>（从任何方面都可以，新闻采集和选题、稿件撰写、化妆和造型、后期制作、或者是卢sir本人的工作）</p>
-            <textarea class="form-control" name="question_7" rows="4" placeholder="请在此回答..."></textarea>
-            <div class="upload-container">
-                <input type="file" name="file_7" accept="image/*,audio/*" multiple>
-            </div>
-            <button class="btn btn-info mt-2" id="recordButton7">开始录音</button>
-            <audio id="audioPlayer7" controls></audio>
-        </div>
-
-        <!-- Question 8 -->
-        <div class="question">
-            <h3>8. 最后，您有没有哪些印象深刻的故事能跟我们分享一下？</h3>
-            <p>（您亲自参与的、或者是身边的《DV现场》工作故事）</p>
-            <textarea class="form-control" name="question_8" rows="4" placeholder="请在此回答..."></textarea>
-            <div class="upload-container">
-                <input type="file" name="file_8" accept="image/*,audio/*" multiple>
-            </div>
-            <button class="btn btn-info mt-2" id="recordButton8">开始录音</button>
-            <audio id="audioPlayer8" controls></audio>
-        </div>
-
-        <!-- 提交按钮 -->
-        <form name="interview-form" method="POST" enctype="multipart/form-data" data-netlify="true">
-            <button type="submit" class="btn btn-primary mt-4">提交</button>
-        </form>
     </div>
 
-    <!-- 录音脚本 -->
     <script>
-        let recordButton1 = document.getElementById('recordButton1');
-        let audioPlayer1 = document.getElementById('audioPlayer1');
-        let mediaRecorder1;
-        let audioChunks1 = [];
+        let currentPage = 1;
+        const totalPages = 2;  // 设置总页面数，按需调整
 
-        recordButton1.addEventListener('click', () => {
-            if (mediaRecorder1 && mediaRecorder1.state === 'recording') {
-                mediaRecorder1.stop();
-                recordButton1.textContent = '开始录音';
-            } else {
-                navigator.mediaDevices.getUserMedia({ audio: true })
-                    .then(stream => {
-                        mediaRecorder1 = new MediaRecorder(stream);
-                        mediaRecorder1.ondataavailable = event => {
-                            audioChunks1.push(event.data);
-                        };
-                        mediaRecorder1.onstop = () => {
-                            let audioBlob = new Blob(audioChunks1, { type: 'audio/wav' });
-                            let audioURL = URL.createObjectURL(audioBlob);
-                            audioPlayer1.src = audioURL;
-                        };
-                        mediaRecorder1.start();
-                        recordButton1.textContent = '停止录音';
-                    })
-                    .catch(err => console.error('Error accessing media devices.', err));
+        const pages = document.querySelectorAll('.question-page');
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
+
+        function updatePage() {
+            // 隐藏所有页面
+            pages.forEach(page => page.classList.remove('active'));
+
+            // 显示当前页面
+            document.getElementById(`page${currentPage}`).classList.add('active');
+        }
+
+        prevButton.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePage();
             }
         });
 
-        // 对于其他问题的代码，类似的修改会根据问题1的处理进行。
-    </script>
+        nextButton.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePage();
+            }
+        });
 
-    <!-- 引入外部JS文件 -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        // 初始化页面
+        updatePage();
+
+        // 录音功能
+        function setupRecording(buttonId, audioPlayerId) {
+            let recordButton = document.getElementById(buttonId);
+            let audioPlayer = document.getElementById(audioPlayerId);
+            let mediaRecorder;
+            let audioChunks = [];
+
+            recordButton.addEventListener('click', () => {
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    // 停止录音
+                    mediaRecorder.stop();
+                    recordButton.textContent = '开始录音';
+                } else {
+                    // 开始录音
+                    navigator.mediaDevices.getUserMedia({ audio: true })
+                        .then(stream => {
+                            mediaRecorder = new MediaRecorder(stream);
+                            mediaRecorder.ondataavailable = event => {
+                                audioChunks.push(event.data);
+                            };
+                            mediaRecorder.onstop = () => {
+                                let audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                                let audioURL = URL.createObjectURL(audioBlob);
+                                audioPlayer.src = audioURL;
+                            };
+                            mediaRecorder.start();
+                            recordButton.textContent = '停止录音';
+                        })
+                        .catch(err => console.error('Error accessing media devices.', err));
+                }
+            });
+        }
+
+        // 为每个录音按钮和播放器设置功能
+        setupRecording('recordButton', 'audioPlayer');
+        setupRecording('recordButton2', 'audioPlayer2');
+    </script>
 </body>
 </html>
