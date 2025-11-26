@@ -80,8 +80,8 @@
             <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
             <div class="upload-container">
                 <input type="file" accept="image/*,audio/*" multiple>
-                <button id="recordButton">开始录音</button>
-                <audio id="audioPlayer" controls></audio>
+                <button id="recordButton1">开始录音</button>
+                <audio id="audioPlayer1" controls></audio>
             </div>
         </div>
 
@@ -96,8 +96,76 @@
             </div>
         </div>
 
-        <!-- 更多问题继续添加 -->
-        <!-- 你可以继续按此格式添加更多问题 -->
+        <!-- 问题 3 -->
+        <div class="question-page" id="page3">
+            <h3>3. 相信您在工作中会和其他栏目工作者对接，您能简单介绍《DV现场》的工作流程、管理机制和技术细节等方面吗？</h3>
+            <p>（比如节目主播卢sir的播讲稿是如何产生的？讲稿本身先写粤语还是普通话版本？如何处理粤语和普通话字幕的转换？选题的线索如何获得、真正关切民生需求？如何把握记者主观点评和新闻客观事实之间、亲民和官方之间的平衡？我们也注意到您有和卢sir连麦的直播，像这样和记者对话环节是怎么提前规划的？）</p>
+            <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
+            <div class="upload-container">
+                <input type="file" accept="image/*,audio/*" multiple>
+                <button id="recordButton3">开始录音</button>
+                <audio id="audioPlayer3" controls></audio>
+            </div>
+        </div>
+
+        <!-- 问题 4 -->
+        <div class="question-page" id="page4">
+            <h3>4. 您认为《DV现场》在新媒体时代的适应情况如何？栏目发展历史中有哪些关键转折点吗？</h3>
+            <p>因为我们也特别关注到，在抖音上有一个《DV短评》的合集，十分受欢迎，内容主要集中了卢sir的口播切片。请问栏目组设立这个短评合集，是出于什么考虑呢？您觉得这种口播短评受欢迎的动因有哪些呢？（例如受众需求/媒体竞争等内在动因、平台特性/文化土壤等外在优势）</p>
+            <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
+            <div class="upload-container">
+                <input type="file" accept="image/*,audio/*" multiple>
+                <button id="recordButton4">开始录音</button>
+                <audio id="audioPlayer4" controls></audio>
+            </div>
+        </div>
+
+        <!-- 问题 5 -->
+        <div class="question-page" id="page5">
+            <h3>5. 我们特别关注到在B站等平台有栏目中“点歌环节”的二创视频，栏目组对此有什么看法？</h3>
+            <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
+            <div class="upload-container">
+                <input type="file" accept="image/*,audio/*" multiple>
+                <button id="recordButton5">开始录音</button>
+                <audio id="audioPlayer5" controls></audio>
+            </div>
+        </div>
+
+        <!-- 问题 6 -->
+        <div class="question-page" id="page6">
+            <h3>6. 如果您给高校新闻专业的同学做分享，您最想推荐《DV现场》的一点是什么？</h3>
+            <p>（工作氛围/流程模式/演播特色/anything）</p>
+            <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
+            <div class="upload-container">
+                <input type="file" accept="image/*,audio/*" multiple>
+                <button id="recordButton6">开始录音</button>
+                <audio id="audioPlayer6" controls></audio>
+            </div>
+        </div>
+
+        <!-- 问题 7 -->
+        <div class="question-page" id="page7">
+            <h3>7. 很多人认为《DV现场》的成功原因在于卢sir鲜明的个人特色，我们想知道您的团队是如何打造并利用好这一特色的？</h3>
+            <p>（从任何方面都可以，新闻采集和选题、稿件撰写、化妆和造型、后期制作、或者是卢sir本人的工作）</p>
+            <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
+            <div class="upload-container">
+                <input type="file" accept="image/*,audio/*" multiple>
+                <button id="recordButton7">开始录音</button>
+                <audio id="audioPlayer7" controls></audio>
+            </div>
+        </div>
+
+        <!-- 问题 8 -->
+        <div class="question-page" id="page8">
+            <h3>8. 最后，您有没有哪些印象深刻的故事能跟我们分享一下？</h3>
+            <p>（您亲自参与的、或者是身边的《DV现场》工作故事）</p>
+            <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
+            <div class="upload-container">
+                <input type="file" accept="image/*,audio/*" multiple>
+                <button id="recordButton8">开始录音</button>
+                <audio id="audioPlayer8" controls></audio>
+            </div>
+        </div>
 
         <!-- 左右翻页按钮 -->
         <div class="text-center">
@@ -108,7 +176,7 @@
 
     <script>
         let currentPage = 1;
-        const totalPages = 2;  // 设置总页面数，按需调整
+        const totalPages = 8;  // 设置总页面数，按需调整
 
         const pages = document.querySelectorAll('.question-page');
         const prevButton = document.getElementById('prevButton');
@@ -173,8 +241,14 @@
         }
 
         // 为每个录音按钮和播放器设置功能
-        setupRecording('recordButton', 'audioPlayer');
+        setupRecording('recordButton1', 'audioPlayer1');
         setupRecording('recordButton2', 'audioPlayer2');
+        setupRecording('recordButton3', 'audioPlayer3');
+        setupRecording('recordButton4', 'audioPlayer4');
+        setupRecording('recordButton5', 'audioPlayer5');
+        setupRecording('recordButton6', 'audioPlayer6');
+        setupRecording('recordButton7', 'audioPlayer7');
+        setupRecording('recordButton8', 'audioPlayer8');
     </script>
 </body>
 </html>
