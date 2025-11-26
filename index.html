@@ -28,6 +28,8 @@
             <div class="upload-container">
                 <input type="file" name="file_1" accept="image/*,audio/*" multiple>
             </div>
+            <button class="btn btn-info mt-2" id="recordButton1">开始录音</button>
+            <audio id="audioPlayer1" controls></audio>
         </div>
 
         <!-- Question 2 -->
@@ -37,6 +39,8 @@
             <div class="upload-container">
                 <input type="file" name="file_2" accept="image/*,audio/*" multiple>
             </div>
+            <button class="btn btn-info mt-2" id="recordButton2">开始录音</button>
+            <audio id="audioPlayer2" controls></audio>
         </div>
 
         <!-- Question 3 -->
@@ -47,6 +51,8 @@
             <div class="upload-container">
                 <input type="file" name="file_3" accept="image/*,audio/*" multiple>
             </div>
+            <button class="btn btn-info mt-2" id="recordButton3">开始录音</button>
+            <audio id="audioPlayer3" controls></audio>
         </div>
 
         <!-- Question 4 -->
@@ -57,6 +63,8 @@
             <div class="upload-container">
                 <input type="file" name="file_4" accept="image/*,audio/*" multiple>
             </div>
+            <button class="btn btn-info mt-2" id="recordButton4">开始录音</button>
+            <audio id="audioPlayer4" controls></audio>
         </div>
 
         <!-- Question 5 -->
@@ -66,6 +74,8 @@
             <div class="upload-container">
                 <input type="file" name="file_5" accept="image/*,audio/*" multiple>
             </div>
+            <button class="btn btn-info mt-2" id="recordButton5">开始录音</button>
+            <audio id="audioPlayer5" controls></audio>
         </div>
 
         <!-- Question 6 -->
@@ -76,6 +86,8 @@
             <div class="upload-container">
                 <input type="file" name="file_6" accept="image/*,audio/*" multiple>
             </div>
+            <button class="btn btn-info mt-2" id="recordButton6">开始录音</button>
+            <audio id="audioPlayer6" controls></audio>
         </div>
 
         <!-- Question 7 -->
@@ -86,6 +98,8 @@
             <div class="upload-container">
                 <input type="file" name="file_7" accept="image/*,audio/*" multiple>
             </div>
+            <button class="btn btn-info mt-2" id="recordButton7">开始录音</button>
+            <audio id="audioPlayer7" controls></audio>
         </div>
 
         <!-- Question 8 -->
@@ -96,53 +110,52 @@
             <div class="upload-container">
                 <input type="file" name="file_8" accept="image/*,audio/*" multiple>
             </div>
+            <button class="btn btn-info mt-2" id="recordButton8">开始录音</button>
+            <audio id="audioPlayer8" controls></audio>
         </div>
 
-        <!-- 表单提交部分 -->
+        <!-- 提交按钮 -->
         <form name="interview-form" method="POST" enctype="multipart/form-data" data-netlify="true">
-            <!-- 在此处添加提交按钮 -->
             <button type="submit" class="btn btn-primary mt-4">提交</button>
         </form>
     </div>
 
-    <!-- 音频录制部分 -->
-    <button id="recordButton" class="btn btn-info mt-4">开始录音</button>
-    <audio id="audioPlayer" controls></audio>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+    <!-- 录音脚本 -->
     <script>
-        let recordButton = document.getElementById('recordButton');
-        let audioPlayer = document.getElementById('audioPlayer');
-        let mediaRecorder;
-        let audioChunks = [];
+        let recordButton1 = document.getElementById('recordButton1');
+        let audioPlayer1 = document.getElementById('audioPlayer1');
+        let mediaRecorder1;
+        let audioChunks1 = [];
 
-        recordButton.addEventListener('click', () => {
-            if (mediaRecorder && mediaRecorder.state === 'recording') {
-                // 停止录音
-                mediaRecorder.stop();
-                recordButton.textContent = '开始录音';
+        recordButton1.addEventListener('click', () => {
+            if (mediaRecorder1 && mediaRecorder1.state === 'recording') {
+                mediaRecorder1.stop();
+                recordButton1.textContent = '开始录音';
             } else {
-                // 开始录音
                 navigator.mediaDevices.getUserMedia({ audio: true })
                     .then(stream => {
-                        mediaRecorder = new MediaRecorder(stream);
-                        mediaRecorder.ondataavailable = event => {
-                            audioChunks.push(event.data);
+                        mediaRecorder1 = new MediaRecorder(stream);
+                        mediaRecorder1.ondataavailable = event => {
+                            audioChunks1.push(event.data);
                         };
-                        mediaRecorder.onstop = () => {
-                            let audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        mediaRecorder1.onstop = () => {
+                            let audioBlob = new Blob(audioChunks1, { type: 'audio/wav' });
                             let audioURL = URL.createObjectURL(audioBlob);
-                            audioPlayer.src = audioURL;
+                            audioPlayer1.src = audioURL;
                         };
-                        mediaRecorder.start();
-                        recordButton.textContent = '停止录音';
+                        mediaRecorder1.start();
+                        recordButton1.textContent = '停止录音';
                     })
                     .catch(err => console.error('Error accessing media devices.', err));
             }
         });
+
+        // 对于其他问题的代码，类似的修改会根据问题1的处理进行。
     </script>
+
+    <!-- 引入外部JS文件 -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
