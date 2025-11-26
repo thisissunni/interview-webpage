@@ -12,15 +12,6 @@
         .question-page.active {
             display: block;
         }
-        .question {
-            margin-top: 20px;
-        }
-        .upload-container {
-            margin-top: 10px;
-        }
-        .upload-container input[type="file"] {
-            margin-right: 10px;
-        }
         .intro-page {
             text-align: center;
             margin-top: 50px;
@@ -42,9 +33,10 @@
         <p>若有任何问题您不便回答，您完全可以选择跳过。我们深知您工作繁忙，感谢您花时间参与此项活动。</p>
         <button id="startInterview" class="btn btn-primary">开始采访</button>
     </div>
+
     <div class="container">
         <!-- 问题 1 -->
-        <div class="question-page active" id="page1">
+        <div class="question-page" id="page1">
             <h3>1. 李记者，请问在您的工作中，会参与到《DV现场》栏目的哪些方面？</h3>
             <textarea class="form-control" rows="4" placeholder="请在此回答..."></textarea>
             <div class="upload-container">
@@ -176,48 +168,14 @@
         // 初始化页面
         updatePage();
 
-        // 录音功能
-        function setupRecording(buttonId, audioPlayerId) {
-            let recordButton = document.getElementById(buttonId);
-            let audioPlayer = document.getElementById(audioPlayerId);
-            let mediaRecorder;
-            let audioChunks = [];
-
-            recordButton.addEventListener('click', () => {
-                if (mediaRecorder && mediaRecorder.state === 'recording') {
-                    // 停止录音
-                    mediaRecorder.stop();
-                    recordButton.textContent = '开始录音';
-                } else {
-                    // 开始录音
-                    navigator.mediaDevices.getUserMedia({ audio: true })
-                        .then(stream => {
-                            mediaRecorder = new MediaRecorder(stream);
-                            mediaRecorder.ondataavailable = event => {
-                                audioChunks.push(event.data);
-                            };
-                            mediaRecorder.onstop = () => {
-                                let audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                                let audioURL = URL.createObjectURL(audioBlob);
-                                audioPlayer.src = audioURL;
-                            };
-                            mediaRecorder.start();
-                            recordButton.textContent = '停止录音';
-                        })
-                        .catch(err => console.error('Error accessing media devices.', err));
-                }
-            });
-        }
-
-        // 为每个录音按钮和播放器设置功能
-        setupRecording('recordButton1', 'audioPlayer1');
-        setupRecording('recordButton2', 'audioPlayer2');
-        setupRecording('recordButton3', 'audioPlayer3');
-        setupRecording('recordButton4', 'audioPlayer4');
-        setupRecording('recordButton5', 'audioPlayer5');
-        setupRecording('recordButton6', 'audioPlayer6');
-        setupRecording('recordButton7', 'audioPlayer7');
-        setupRecording('recordButton8', 'audioPlayer8');
+        // 点击“开始采访”按钮时，隐藏感谢页面，显示第一个问题页面
+        document.getElementById('startInterview').addEventListener('click', () => {
+            // 隐藏感谢页面
+            document.getElementById('introPage').style.display = 'none';
+            
+            // 显示第一个问题页面
+            document.getElementById('page1').style.display = 'block';
+        });
     </script>
 </body>
 </html>
